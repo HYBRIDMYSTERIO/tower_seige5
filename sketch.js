@@ -1,13 +1,20 @@
 var Engine = Matter.Engine,
-  World = Matter.World,
-  Events = Matter.Events,
-  Bodies = Matter.Bodies;
+ World = Matter.World,
+Events = Matter.Events,
+ Bodies = Matter.Bodies;
  
 var particles = [];
 var plinkos = [];
+var divisions = [];
 
 var divisionHeight=300;
 var score =0;
+
+var particale;
+
+var count = 0;
+
+var gameState = "play";
 function setup() {
   createCanvas(800, 800);
   engine = Engine.create();
@@ -54,7 +61,7 @@ function setup() {
 function draw() {
   background("black");
   textSize(20)
- //text("Score : "+score,20,30);
+   text("Score : "+score,20,30);
   Engine.update(engine);
  
   
@@ -64,7 +71,7 @@ function draw() {
      
    }
    if(frameCount%60===0){
-     particles.push(new particle(random(width/2-30, width/2+30), 10,10));
+     particles.push(new Particle(random(width/2-30, width/2+30), 10,10));
      score++;
    }
  
@@ -76,4 +83,48 @@ function draw() {
      
      divisions[k].display();
    }
+   
+   mousePressed();
+   
+   if(particale !== null){
+    particale.display();
+
+    if(particale.body.position.y >760)
+    {
+      if(particale.body.position.x <300)
+      {
+        score = score + 500;
+        particale = null;
+        
+        if(count >= 5) gameState = "end";
+      }
+    }
+ }
+
+   
+
+   if(score === 20){
+
+    
+    
+    gameState = "end";
+
+    textSize(35);
+    text("game over",100,200);
+  
+    score = 0;
+     
+   }
+
+   
+}
+
+function mousePressed(){
+  if(gameState !== "end"){
+
+    count++;
+    particale = new Particle(mouseX, 30,10,50);
+  }
+
+ 
 }
